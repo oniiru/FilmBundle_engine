@@ -638,8 +638,14 @@ padding:0px;
 .littlesocial:hover ul {
 	display:block;
 }
+
 li.twitli:hover {
 	background:#46c0fb;
+	padding-left:20px;
+	padding-right:0px;
+}
+li.plusli:hover {
+	background:#dd4b39;
 	padding-left:20px;
 	padding-right:0px;
 }

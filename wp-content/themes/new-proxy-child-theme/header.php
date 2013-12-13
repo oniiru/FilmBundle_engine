@@ -147,6 +147,8 @@ jQuery(document).ready(function($) {
 				
 				<?php } ?>
 		</div>
+		
+	
         <div class="littlesocial">
 			<i style="font-size:1.3em; display:none;vertical-align:middle"class="icon-twitter"></i> <h3> Follow Us </h3>
 			<ul>
@@ -157,6 +159,19 @@ jQuery(document).ready(function($) {
         <div style="position:relative;display:inline-block"><a href="https://twitter.com/FilmBundle" class="twitter-follow-button" data-show-count="true" data-show-screen-name="false">Follow @FilmBundle</a>
           <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
           </div>
+	  </li>
+	  <li class='plusli'>
+		  <!-- Place this tag where you want the widget to render. -->
+		  <div class="g-follow" data-annotation="bubble" data-height="20" data-href="https://plus.google.com/106976496344175389196" data-rel="publisher"></div>
+
+		  <!-- Place this tag after the last widget tag. -->
+		  <script type="text/javascript">
+		    (function() {
+		      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		      po.src = 'https://apis.google.com/js/platform.js';
+		      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		    })();
+		  </script>
 	  </li>
 	  <li class='tubeli'>
 		  <script src="https://apis.google.com/js/plusone.js"></script>

@@ -39,7 +39,7 @@ class Pwyw_Widgets
      */
     public function scripts()
     {
-        if (!is_home()) {
+        if (is_home()) {
             return;
         }
 

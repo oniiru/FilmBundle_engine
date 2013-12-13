@@ -289,31 +289,9 @@ jQuery(document).ready(function($) {
 
 </header>
 <?php
-    if (is_user_logged_in()) {
-        // Get relevant info for current user
-        $user = wp_get_current_user();
-        $email = $user->user_email;
-
-        // Retrieve the user from the subscriber DB
-        global $wpdb;
-        $tablename = $wpdb->prefix . SEED_CSP3_TABLENAME;
-        $sql = "SELECT * FROM $tablename WHERE email = %s;";
-        $safe_sql = $wpdb->prepare($sql, $email);
-        $result = $wpdb->get_row($safe_sql);
-
-        if ($result) {
-            // Calc referrer url
-            $ref = $result->id+1000;
-			$urlnoslash = rtrim(home_url(),'/');
-            $referrer_url = $urlnoslash . '?ref='.base_convert($ref, 10, 36);
-        };
-		$sharingiscaringheader = $referrer_url;
-
-	}
-	else {
+   
 		$sharingiscaringheader = home_url();
 
-	}
     // Setup share urls
     $facebookheader_share = "http://www.facebook.com/sharer.php?s=100&amp;p[title]=".urlencode($thebundle[0]['facetitle'])."&amp;p[summary]=".urlencode($thebundle[0]['facedescription'])."&amp;p[images][0]=".$thebundle[0]['face_image']."&amp;p[url]=".$sharingiscaringheader;
     $twitterheader_share = "https://twitter.com/share?url=".$sharingiscaringeheader."&amp;text=".urlencode($thebundle[0]['twittermessage'].' - '.$sharingiscaringheader);

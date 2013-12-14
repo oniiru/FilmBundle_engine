@@ -890,11 +890,13 @@ ul.nav-tabs {
 .filminformation {
 	width:100%;
 	height:100%;
-	background:#f8f8f8;
 	position:relative;
-	border:1px solid #ddd;
+	border:1px solid #A3A3A3;
 	display:none;
+    background-size: cover !important;
+	
 }
+
 .filminformation h3 {
 	font-size:22px;
 	margin-top:12px;
@@ -919,7 +921,7 @@ p.rungen {
 .lockeditem {
 	width:100%;
 	height:100%;
-	background:rgba(28, 147, 197, 0.7);
+	background:rgba(38, 50, 54, 0.63);
 	position:relative;
 }
 
@@ -1061,7 +1063,6 @@ margin-left: 50px;
 width:200px;
 }
 .buybundle {
-	top:50px;
 	padding:30px;
 	padding-bottom:10px;
 	background:rgba(0, 0, 0, 0.88)
@@ -1411,7 +1412,7 @@ box-shadow: 0 0 40px 0 rgba(0,0,0,0.75);
 .video-holder {
 	max-width:920px;
 	margin:auto;
-	box-shadow: 0 0 40px 0 rgba(0,0,0,0.75);
+	box-shadow: 0 0 20px 1px rgba(0,0,0,1);
 	position:relative;
 }
 .undervidstripe {

@@ -4,7 +4,9 @@ Template Name: Bundles Template
 */
 
 get_header();
+
 ?>
+<script type='text/javascript' src='<?php echo get_stylesheet_directory_uri(); ?>/assets/js/blur.js'></script>
 
 <script type="text/javascript">
 	jQuery(document).ready(function() {
@@ -34,6 +36,12 @@ get_header();
 	function slideShow(args) {
 		jQuery('.item').show();
 	}
+    jQuery('.filminformation').blurjs({
+           source: '.anextrafilm',
+           radius: 30,
+           overlay: 'rgba(0, 0, 0, .2)'
+       });
+	});
 </script>
 
 
@@ -232,9 +240,9 @@ foreach ($bundles as $bundle)
 
 <script>
   jQuery(".anextrafilm").mouseenter(function() {
-    jQuery(this).children('.filminformation').fadeIn(200);
+    jQuery(this).children('.filminformation').fadeIn(400);
   }).mouseleave(function() {
-    jQuery(this).children('.filminformation').fadeOut(200);
+    jQuery(this).children('.filminformation').fadeOut(400);
   });
 
 </script>

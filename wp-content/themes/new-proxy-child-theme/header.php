@@ -251,7 +251,7 @@ jQuery(document).ready(function($) {
 		   return $cont;
 		   }
 		   }
-		   $obj=new shareCount("http://www.humblebundle.com");  //Use your website or URL
+		   $obj=new shareCount("http://filmbundle.com");  //Use your website or URL
 		   $twittershares = $obj->get_tweets(); //to get tweets
 		   $facebookshares = $obj->get_fb(); //to get facebook total count (likes+shares+comments)
 		   $twitterstart = $thebundle[0]['twitterstart'];
@@ -264,7 +264,7 @@ jQuery(document).ready(function($) {
 		   $goalratiotwit = (($currenttwitter / $twittergoal) * 100);
 	   }
 	   else {$goalratiotwit = 1;}
-	   if($goalratioface != 0) {
+	   if($facegoal != 0) {
 		   $goalratioface = (($currentface / $facegoal) * 100);
 	   }
 	   else {$goalratioface = 1;}

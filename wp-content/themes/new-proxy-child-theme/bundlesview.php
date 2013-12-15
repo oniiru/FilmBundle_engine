@@ -24,7 +24,7 @@ get_header();
 			infiniteSlider: true,
 			onSliderLoaded: slideShow
 		});
-
+	   
 	});
 
 	function slideChange(args) {
@@ -36,12 +36,7 @@ get_header();
 	function slideShow(args) {
 		jQuery('.item').show();
 	}
-    jQuery('.filminformation').blurjs({
-           source: '.anextrafilm',
-           radius: 30,
-           overlay: 'rgba(0, 0, 0, .2)'
-       });
-	});
+
 </script>
 
 
@@ -101,7 +96,7 @@ if(edd_get_users_purchases( $user_id ) == false) {
 
 $bundles = $wpdb->get_results("SELECT * FROM wp_pwyw_bundles", ARRAY_A);
 
-foreach ($bundles as $bundle)
+foreach ($bundles as $id => $bundle)
 {
 
  $activebundle = $bundle['activated'];
@@ -117,7 +112,7 @@ foreach ($bundles as $bundle)
 	 if(edd_has_user_purchased( $user_ID, $bundleabovebelow )) {
 ?>
 
-
+	
  <script type="text/javascript">
 
 
@@ -203,7 +198,8 @@ foreach ($bundles as $bundle)
    	 if(edd_has_user_purchased( $user_ID, $aorb )) {
    ?>
 
-
+   
+		
 <div class = 'filmitem item-<?php echo $bundleid?>'>
 	<?php if ($film['linkedpage'] != '') {?>
 	<a class="showinfo" href="<?php echo $film['linkedpage'] ?>">
@@ -236,7 +232,26 @@ foreach ($bundles as $bundle)
 </div>
 </div>
 
-<?php } } ?>
+<?php }
+if ($id == 0) { ?>
+
+	<div class="uptodate">
+		<h2>Follow the Latest FilmBundle News!</h2>
+		
+        <div>
+            <a class="zocial facebook" href="http://facebook.com/filmbundle" target="_blank">Facebook</a>
+
+            <a class="zocial twitter" href="http://twitter.com/filmbundle" target="_blank">Twitter</a>
+      
+            <a class="zocial google" href="http://plus.google.com/+Filmbundle" target="_blank"> Google+</a>
+        </div>
+	</div>
+
+
+   <?php
+   	
+   }
+ } ?>
 
 <script>
   jQuery(".anextrafilm").mouseenter(function() {

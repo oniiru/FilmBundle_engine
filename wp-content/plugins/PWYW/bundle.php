@@ -54,7 +54,7 @@ die(curl_error($ch));
 return $cont;
 }
 }
-$obj=new shareCount("http://www.humblebundle.com");  //Use your website or URL
+$obj=new shareCount("http://filmbundle.com");  //Use your website or URL
 $twittershares = $obj->get_tweets(); //to get tweets
 $facebookshares = $obj->get_fb(); //to get facebook total count (likes+shares+comments)
 $twitterstart = $pwyw_data['bundle']->twitterstart;

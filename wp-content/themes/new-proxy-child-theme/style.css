@@ -1341,8 +1341,16 @@ font-size: 15px;
 			button.tipbutton {
 				border-radius: 2px;
 				padding: 13px;
-				background: #F00864 !important;
+				border-bottom: 2px solid #105A79;
+				padding-bottom: 11px;
+				border-radius: 3px;
+				margin-left: 5px;
 
+			}
+			button.tipbutton:hover {
+				border-bottom: 1px solid #105A79;
+				position:relative;
+				top:1px;
 			}
 			.tipster form{
 				display: inline-block;
@@ -1372,19 +1380,28 @@ font-size: 15px;
 	input.flatinput:focus {
 		border: 1px solid white;
 	}
-	.tipstertext h3 {
-		color:#fff;
+	.tipstertext {
+		margin-right:0px;
+		display:block;
+		text-align:center;
+		font-family:'yanone', sans-serif;
+		color:white;
 		font-size:20px;
+		display: inline-block;
+		text-align: left;
 	}
-	.tipster {
-		margin:auto;
-		max-width:950px;
-		background-color: #16a085;
-		padding: 30px;
-		text-align: center;
-		color:#fff;
-		padding-bottom:20px;
-		box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.61);
+	.tipstertext h3 {
+		font-family:'yanone', sans-serif;
+		line-height: .8em;
+		margin-top: 10px;
+		color: white;
+		font-size: 33px;
+	}
+	#tipster-form {
+		display: inline-block;
+		vertical-align: top;
+		margin-top: 14px;
+		margin-left: 50px;
 		
 	}
 	.filmtitl {
@@ -1394,7 +1411,10 @@ font-size: 15px;
 		margin:auto;
 
 	}
-
+	.filminfobg {
+	
+		
+	}
 	.filmtitl .zocial {
 		padding:8px 15px;
 		font: 13px/1 "Lucida Grande", Tahoma, sans-serif;
@@ -1410,6 +1430,7 @@ display:inline-block;
 	margin-top:10px;
 	margin-bottom:0px;
 	margin-right:30px;
+	text-shadow:1px 1px black;
 
 
 
@@ -1489,8 +1510,8 @@ vertical-align: top;
 .bg-trans {
 width:100%;
 height:100%;
-background: rgba(0,0,0,.6);
 padding-top:50px;
+background:rgba(0,0,0,.5);
 }
 #filmbackground {
 	background-attachment:fixed;
@@ -1510,6 +1531,7 @@ padding-top:50px;
 	padding:20px 35px;
 	overflow: hidden;
 	margin-top: 15px;
+	padding-bottom:0px;
 
 }
 
@@ -3553,6 +3575,10 @@ padding-top: 75px;
 
 	.tipster form {
 		top:10px;
+		
+	}
+	#tipster-form {
+		margin-left:0px;
 	}
 	
 	#backToTop {display:none;}
@@ -3608,6 +3634,9 @@ width: 47.917%;
 	margin: 10px 0px;
 	width:100%;
 	
+}
+.tipstertext h3 {
+	font-size:25px;
 }
 #how h5 {
 	margin-top:20px !important;

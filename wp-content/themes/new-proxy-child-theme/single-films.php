@@ -11,7 +11,7 @@ $videometa = $full_mb->the_meta();
 	<div class="bg-trans">
 
 		<div class="video-holder">
-		 <?php
+		 <!-- <?php
 		 global $wpdb;
 		 $linkedbundle = $videometa['thisbundle'];
 		 $bundles = $wpdb->get_results("SELECT * FROM wp_pwyw_bundles WHERE id = $linkedbundle;", ARRAY_A);
@@ -39,12 +39,12 @@ $videometa = $full_mb->the_meta();
             'jsplacement' => 'inline'
         );
         echo tminuscountdown($atts);
-    ?>
+    ?> 
 </div>
 </div>
 </div>
 <?php };?>
-
+-->
 
 			<?php global $user_ID;
 			$abovebelow = array (
@@ -236,6 +236,7 @@ elseif($activebundle == 0) { ?>
 <?php }
 
 }?>
+<div class="filminfobg">
 <div class="filminfo">
 	<div class="tabbable tabs-left">
 	              <ul class="nav nav-tabs">
@@ -282,7 +283,7 @@ elseif($activebundle == 0) { ?>
 	            </div> <!-- /tabbable -->
 
 </div>
-	</div>
+	</div></div>
 </div>
 
 
@@ -373,7 +374,7 @@ elseif($activebundle == 0) { ?>
 if (($videometa['tipster'] == 'yes') && (((edd_has_user_purchased( $user_ID, $abovebelow )) && ($videometa['abvaccessonly'] == '')) || ((edd_has_user_purchased( $user_ID, $videometa['aboveavg'] )) && ($videometa['abvaccessonly'] == 'above')))
 ) {
 ?>
-    <div class="tipster">
+    <div class="uptodate" style="text-align:center">
         <div class="tipstertext">
             <h3>Like what you see? Tip the Filmmaker!</h3>
             <p>(All tips received go straight to the filmmaker.)</p>

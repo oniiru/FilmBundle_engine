@@ -5,7 +5,10 @@ Template Name: Landing Page
 get_header('landing'); ?>
 
 <div class="landingcontent-top">
-	<div class="landingcontainer">
+	<div class="landingcontainer mustadapt">
+		<div class="landingcontent-topright">
+			<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/img/landing.png">
+		</div>
 	<div class="landingcontent-topleft">
 		<h1>Choose your own price for bundles of amazing indies.</h1>
 		<p>Limited-time bundles of amazing hand-selected independent films. Pay only what they are worth to you, and support charity while you're at it.</p>
@@ -18,9 +21,6 @@ get_header('landing'); ?>
 	
 	</div>
 	
-	<div class="landingcontent-topright">
-		<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/img/landing.png">
-	</div>
 	
 </div>
 	

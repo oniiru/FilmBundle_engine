@@ -3,7 +3,7 @@
 Plugin Name: WordPress Twitter Bootstrap CSS
 Plugin URI: http://www.icontrolwp.com/wordpress-twitter-bootstrap-css-plugin-home/
 Description: Link Twitter Bootstrap CSS and Javascript files before all others regardless of your theme.
-Version: 3.0.0-4
+Version: 3.0.3-0
 Author: iControlWP
 Author URI: http://icwp.io/v
 */
@@ -35,9 +35,23 @@ require_once( dirname(__FILE__).'/src/icwp-optionshandler-wptb.php' );
 if ( !class_exists('HLT_BootstrapCss') ):
 
 class HLT_BootstrapCss extends ICWP_WTB_Base_Plugin {
-	
-	const PluginVersion				= '3.0.0-4';  //SHOULD BE UPDATED UPON EACH NEW RELEASE
+
+	/**
+	 * Should be updated each new release.
+	 * @var string
+	 */
+	const PluginVersion				= '3.0.3-0';  //SHOULD BE UPDATED UPON EACH NEW RELEASE
+	/**
+	 * @var string
+	 */
+	const PluginTextDomain			= 'wordpress-bootstrap-css';
+	/**
+	 * @var string
+	 */
 	const InputPrefix				= 'hlt_bootstrap_';
+	/**
+	 * @var string
+	 */
 	const OptionPrefix				= 'hlt_bootstrapcss_'; //ALL database options use this as the prefix.
 
 	/**
@@ -103,12 +117,13 @@ class HLT_BootstrapCss extends ICWP_WTB_Base_Plugin {
 		$this->m_sPluginRootFile = __FILE__; //ensure all relative paths etc. are setup.
 		parent::__construct();
 		
-		$this->m_sVersion			= self::PluginVersion;
-		$this->m_sPluginHumanName	= "WordPress Twitter Bootstrap";
-		$this->m_sPluginMenuTitle	= "Twitter Bootstrap";
-		$this->m_sOptionPrefix		= self::OptionPrefix;
-
-		$this->m_sParentMenuIdSuffix = 'wtb';
+		$this->m_sVersion				= self::PluginVersion;
+		$this->m_sPluginHumanName		= "WordPress Twitter Bootstrap";
+		$this->m_sPluginTextDomain		= self::PluginTextDomain;
+		$this->m_sPluginMenuTitle		= "Twitter Bootstrap";
+		$this->m_sOptionPrefix			= self::OptionPrefix;
+		$this->m_sParentMenuIdSuffix	= 'wtb';
+		
 		$this->loadWptbOptions();
 
 		self::$BOOSTRAP_DIR			= $this->m_sPluginDir.'resources'.ICWP_DS.'bootstrap-'.$this->m_oWptbOptions->getTwitterBootstrapVersion().ICWP_DS;
@@ -135,12 +150,11 @@ class HLT_BootstrapCss extends ICWP_WTB_Base_Plugin {
 		if ( isset( $this->m_oBsLess ) ) {
 			return;
 		}
-		
 		if ( $this->m_oWptbOptions->getOpt( 'option' ) == 'twitter' ) {
-			require_once( dirname(__FILE__).'/hlt-bootstrap-less.php' );
+			require_once( dirname(__FILE__).'/src/hlt-bootstrap-less.php' );
 		}
 		else {
-			require_once( dirname(__FILE__).'/hlt-bootstrap-less-legacy.php' );
+			require_once( dirname(__FILE__).'/src/hlt-bootstrap-less-legacy.php' );
 		}
 		
 		$this->setLessOptionsKey();
@@ -179,10 +193,10 @@ class HLT_BootstrapCss extends ICWP_WTB_Base_Plugin {
 		$sBootstrapOption = $this->m_oWptbOptions->getOpt( 'option' );
 		if ( strpos( $sBootstrapOption, 'twitter' ) !== false && $this->m_oWptbOptions->getOpt( 'useshortcodes' ) == 'Y' ) {
 			if ( $sBootstrapOption == 'twitter' ) {
-				require_once( dirname(__FILE__).'/hlt-bootstrap-shortcodes.php' );
+				require_once( dirname(__FILE__).'/src/hlt-bootstrap-shortcodes.php' );
 			}
 			else {
-				require_once( dirname(__FILE__).'/hlt-bootstrap-shortcodes-legacy.php' );
+				require_once( dirname(__FILE__).'/src/hlt-bootstrap-shortcodes-legacy.php' );
 			}
 			$oShortCodes = new HLT_BootstrapShortcodes();
 		}
@@ -232,9 +246,6 @@ class HLT_BootstrapCss extends ICWP_WTB_Base_Plugin {
 		if ( is_admin() && $this->m_oWptbOptions->getOpt( 'inc_bootstrap_css_in_editor' ) == 'Y' ) {
 			add_filter( 'mce_css', array( $this, 'filter_include_bootstrap_in_editor' ) );
 		}
-		
-		//Multilingual support.
-		load_plugin_textdomain( 'hlt-wordpress-bootstrap-css', false, basename( dirname( __FILE__ ) ) . '/languages' );
 	}
 	
 	protected function createPluginSubMenuItems(){
@@ -250,18 +261,23 @@ class HLT_BootstrapCss extends ICWP_WTB_Base_Plugin {
 	protected function handlePluginUpgrade() {
 		$sCurrentPluginVersion = $this->m_oWptbOptions->getOpt( 'current_plugin_version' );
 		
+		if ( empty($sCurrentPluginVersion) ) {
+			$sCurrentPluginVersion = '0.0';
+		}
+		
 		// Forces a rebuild for the list of CSS includes
 		if ( $sCurrentPluginVersion !== $this->m_sVersion ) {
-			$this->m_oWptbOptions->setOpt( 'includes_list', false );
+			$this->m_oWptbOptions->maybeClearIncludesCache( true );
 		}
 		
 		// ensure only valid users attempt this.
 		if ( $sCurrentPluginVersion !== $this->m_sVersion && current_user_can( 'manage_options' ) ) {
 
+			$this->loadBootstrapLess();
+			$this->m_oBsLess->handleUpgrade( $sCurrentPluginVersion );
+	
 			//Recompile LESS CSS if applicable
 			if ( $this->m_oWptbOptions->getOpt('use_compiled_css') == 'Y' ) {
-				
-				$this->loadBootstrapLess();
 				if ( $this->m_oBsLess->reWriteVariablesLess() ) {
 					$this->m_oBsLess->compileAllBootstrapLess();
 				}
@@ -273,16 +289,34 @@ class HLT_BootstrapCss extends ICWP_WTB_Base_Plugin {
 
 		//Someone clicked the button to acknowledge the update
 		if ( isset( $_POST['hlt_hide_update_notice'] ) && isset( $_POST['hlt_user_id'] ) ) {
-			$result = update_user_meta( $_POST['hlt_user_id'], $this->m_sOptionPrefix.'current_version', $this->m_sVersion );
-			
+			$this->updateVersionUserMeta( $_POST['user_id'] );
 			if ( $this->isShowMarketing() ) {
 				wp_redirect( admin_url( "admin.php?page=".$this->getFullParentMenuId() ) );
 			}
 			else {
-				wp_redirect( admin_url( $_POST['hlt_redirect_page'] ) );
+				wp_redirect( admin_url( $_POST['redirect_page'] ) );
 			}
+			exit();
 		}
-		
+	}
+	
+	/**
+	 * Updates the current (or supplied user ID) user meta data with the version of the plugin
+	 *  
+	 * @param unknown_type $innId
+	 */
+	protected function updateVersionUserMeta( $innId = null ) {
+		if ( is_null( $innId ) ) {
+			$oCurrentUser = wp_get_current_user();
+			if ( !($oCurrentUser instanceof WP_User) ) {
+				return;
+			}
+			$nUserId = $oCurrentUser->ID;
+		}
+		else {
+			$nUserId = $innId;
+		}
+		update_user_meta( $nUserId, self::OptionPrefix.'current_version', $this->m_sVersion );
 	}
 	
 	public function onWpAdminNotices() {
@@ -361,6 +395,14 @@ class HLT_BootstrapCss extends ICWP_WTB_Base_Plugin {
 		}
 	}
 	
+	public function onDisplayMainMenu() {
+
+		// To ensure the nag bar disappears if/when they visit the dashboard
+		// regardless of clicking the button.
+		$this->updateVersionUserMeta();
+		parent::onDisplayMainMenu();
+	}
+	
 	public function onDisplayWtbCss() {
 
 		$aAvailableOptions = $this->m_oWptbOptions->getOptions();
@@ -382,7 +424,7 @@ class HLT_BootstrapCss extends ICWP_WTB_Base_Plugin {
 		
 		$this->loadBootstrapLess();
 		$aAvailableOptions = $this->m_oBsLess->getAllBootstrapLessOptions( false );
-		
+
 		$aData = array(
 			'plugin_url'				=> $this->m_sPluginUrl,
 			'var_prefix'				=> $this->m_sOptionPrefix,
@@ -421,7 +463,7 @@ class HLT_BootstrapCss extends ICWP_WTB_Base_Plugin {
 			}
 		}
 		$this->loadWptbProcessor();
-		$this->m_oWptbProcessor->updateIncludesCache(); //clear it
+		$this->m_oWptbOptions->maybeClearIncludesCache( true );
 		$this->flushCaches();
 		
 		if ( !self::$m_fUpdateSuccessTracker ) {

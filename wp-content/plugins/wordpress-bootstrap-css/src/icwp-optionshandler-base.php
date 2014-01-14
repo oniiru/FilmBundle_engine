@@ -44,6 +44,11 @@ class ICWP_OptionsHandler_Base_WPTB {
 	protected $m_aDirectSaveOptions;
 	
 	/**
+	 * @var boolean
+	 */
+	protected $m_fIsMultisite;
+	
+	/**
 	 * This is used primarily for the options deletion/cleanup.  We store the names
 	 * of options here that are not modified directly by the user/UI so that we can
 	 * cleanup later on.
@@ -73,16 +78,33 @@ class ICWP_OptionsHandler_Base_WPTB {
 		$this->m_aOptionsStoreName = $insStoreName;
 		$this->m_sVersion = $insVersion;
 		
+		$this->m_fIsMultisite = function_exists( 'is_multisite' ) && is_multisite();
+		
 		// Build the whole options system.
 		$this->initOptions();
 		
 		// Handle any upgrades as necessary (only go near this if it's the admin area)
-		if ( is_admin() ) {
-			require_once( ABSPATH . 'wp-includes/pluggable.php' );
-			if ( current_user_can( 'manage_options' ) ) {
-				$this->updateHandler();
-			}
+		add_action( 'plugins_loaded', array( $this, 'doUgrade' ) );
+	}
+	
+	public function doUgrade() {
+		if ( $this->hasPluginManageRights() ) {
+			$this->initOptions();
+			$this->updateHandler();
 		}
+	}
+	
+	public function hasPluginManageRights() {
+		if ( !current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+		if ( $this->m_fIsMultisite && is_network_admin() ) {
+			return true;
+		}
+		else if ( !$this->m_fIsMultisite && is_admin() ) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**

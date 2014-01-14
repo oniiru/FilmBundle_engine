@@ -30,6 +30,11 @@ class ICWP_Pure_Base_WPTB {
 	const VariablePrefix	= 'worpit';
 
 	/**
+	 * @var integer
+	 */
+	const HourInSeconds		= 3600;
+
+	/**
 	 * @var string
 	 */
 	protected $m_sVersion;
@@ -38,6 +43,10 @@ class ICWP_Pure_Base_WPTB {
 	 * @var string
 	 */
 	protected $m_sPluginHumanName;
+	/**
+	 * @var string
+	 */
+	protected $m_sPluginTextDomain;
 	/**
 	 * @var string
 	 */
@@ -176,11 +185,19 @@ class ICWP_Pure_Base_WPTB {
 			//Handle plugin upgrades
 			$this->handlePluginUpgrade();
 			$this->doPluginUpdateCheck();
+			$this->load_textdomain();
 		}
 
 		if ( $this->isIcwpPluginFormSubmit() ) {
 			$this->handlePluginFormSubmit();
 		}
+	}
+	
+	/**
+	 * Load the multilingual aspect of the plugin
+	 */
+	public function load_textdomain() {
+		load_plugin_textdomain( $this->m_sPluginTextDomain, false, dirname( $this->m_sPluginRootFile ) . '/languages/' );
 	}
 
 	public function onWpInit() { }
@@ -188,7 +205,7 @@ class ICWP_Pure_Base_WPTB {
 	public function onWpAdminInit() {
 		//Do Plugin-Specific Admin Work
 		if ( $this->isIcwpPluginAdminPage() ) {
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueueBootstrapAdminCss' ), 99 );
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueueBootstrapLegacyAdminCss' ), 99 );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueuePluginAdminCss' ), 99 );
 		}
 	}
@@ -269,7 +286,9 @@ class ICWP_Pure_Base_WPTB {
 	 * @param $inaLinks
 	 * @param $insFile
 	 */
-	public function onWpPluginActionLinks( $inaLinks, $insFile ) { }
+	public function onWpPluginActionLinks( $inaLinks, $insFile ) {
+		return $inaLinks;
+	}
 
 	/**
 	 * Override this method to handle all the admin notices
@@ -327,7 +346,12 @@ class ICWP_Pure_Base_WPTB {
 	public function enqueueBootstrapAdminCss() {
 		wp_register_style( 'worpit_bootstrap_wpadmin_css', $this->getCssUrl( 'bootstrap-wpadmin.css' ), false, $this->m_sVersion );
 		wp_enqueue_style( 'worpit_bootstrap_wpadmin_css' );
-		wp_register_style( 'worpit_bootstrap_wpadmin_css_fixes', $this->getCssUrl('bootstrap-wpadmin-fixes.css'),  array('worpit_bootstrap_wpadmin_css'), $this->m_sVersion );
+	}
+
+	public function enqueueBootstrapLegacyAdminCss() {
+		wp_register_style( 'worpit_bootstrap_wpadmin_legacy_css', $this->getCssUrl( 'bootstrap-wpadmin-legacy.css' ), false, $this->m_sVersion );
+		wp_enqueue_style( 'worpit_bootstrap_wpadmin_legacy_css' );
+		wp_register_style( 'worpit_bootstrap_wpadmin_css_fixes', $this->getCssUrl('bootstrap-wpadmin-fixes.css'),  array('worpit_bootstrap_wpadmin_legacy_css'), $this->m_sVersion );
 		wp_enqueue_style( 'worpit_bootstrap_wpadmin_css_fixes' );
 	}
 
@@ -506,6 +530,26 @@ class ICWP_Pure_Base_WPTB {
 			$insKey = $this->m_sOptionPrefix.$insKey;
 		}
 		return ( isset( $_POST[$insKey] )? $_POST[$insKey]: null );
+	}
+
+	/**
+	 * Gets the WordPress option based on this object's option prefix.
+	 * @param string $insKey
+	 * @return mixed
+	 */
+	public function getTransOption( $insKey ) {
+		$this->loadWpFunctions();
+		$this->m_oWpFunctions->getTransient( $this->m_sOptionPrefix.$insKey );
+	}
+	
+	/**
+	 * Gets the WordPress option based on this object's option prefix.
+	 * @param string $insKey
+	 * @return mixed
+	 */
+	public function setTransOption( $insKey, $inmValue, $innHours = 24 ) {
+		$this->loadWpFunctions();
+		$this->m_oWpFunctions->setTransient( $this->m_sOptionPrefix.$insKey, $innHours * self::HourInSeconds );
 	}
 
 	/**

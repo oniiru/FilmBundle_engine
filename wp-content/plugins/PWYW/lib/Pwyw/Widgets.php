@@ -39,10 +39,6 @@ class Pwyw_Widgets
      */
     public function scripts()
     {
-        if (is_home()) {
-            return;
-        }
-
         wp_enqueue_style(
             'pwyw-widget-bundle',
             plugins_url('/assets/stylesheets/widget-bundle.css', Pwyw::FILE),

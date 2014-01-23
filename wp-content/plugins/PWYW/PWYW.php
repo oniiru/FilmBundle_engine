@@ -526,8 +526,6 @@ class Pwyw
                 }
             }
 
-            $pwyw_levels = $wpdb->get_results("SELECT l.`id`,l.`name` FROM {$wpdb->pmpro_membership_levels} l");
-
             $pwyw_payment_info = $wpdb->get_results("SELECT COUNT(`id`) as total_sales, SUM(`sum`) as total_payments, AVG(`sum`) as avg_price
                                                             FROM {$this->payment_info} WHERE `bundle` = {$pwyw_bundle->id} GROUP BY `bundle`");
 
@@ -657,7 +655,6 @@ class Pwyw
 
         $data['categories'] = $pwyw_category;
         $data['bundle'] = $pwyw_bundle;
-        $data['levels'] = $pwyw_levels;
         $data['payment_info'] = isset($pwyw_payment_info[0]) ? $pwyw_payment_info[0] : null;
         $data['top'] = $pwyw_top_contr;
         $data['min_amount'] = isset($min_amount) ? $min_amount : $pwyw_bundle->suggested_val_1;
@@ -791,11 +788,8 @@ class Pwyw
     {
         global $wpdb;
 
-        $pwyw_levels = $wpdb->get_results("SELECT l.`id`,l.`name` FROM {$wpdb->pmpro_membership_levels} l");
-
         $sql = "SELECT c.`id`,c.`title`,c.`order`,c.`parent` FROM {$this->categories} c WHERE `parent` = 0";
         $pwyw_categories = $wpdb->get_results($sql);
-        $pwyw_levels = $wpdb->get_results("SELECT l.`id`,l.`name` FROM {$wpdb->pmpro_membership_levels} l");
         foreach ($pwyw_categories as $category) {
             if ($category->parent == 0) {
                 $pwyw_category[$category->id]['info']['title'] = $category->title;
@@ -804,7 +798,6 @@ class Pwyw
             }
            // $val += $category->val;
         }
-        $pwyw_data['levels'] = $pwyw_levels;
 
         $pwyw_data['categories'] = $pwyw_category;
         $pwyw_action = sprintf('?page=%s&action=%s', $_REQUEST['page'], 'create');
